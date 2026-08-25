@@ -2,8 +2,7 @@ name: Assemble seeded row b64
 on:
   push:
     paths:
-      - 'findings_list_seeded_row.png.b64.part1'
-      - 'findings_list_seeded_row.png.b64.part2'
+      - 'findings_list_seeded_row.png.b64.p4'
   workflow_dispatch:
 jobs:
   assemble:
@@ -15,14 +14,14 @@ jobs:
       - name: Concatenate parts
         run: |
           set -euo pipefail
-          test -f findings_list_seeded_row.png.b64.part1
-          test -f findings_list_seeded_row.png.b64.part2
-          cat findings_list_seeded_row.png.b64.part1 findings_list_seeded_row.png.b64.part2 > findings_list_seeded_row.png.b64
-          wc -c findings_list_seeded_row.png.b64
+          for i in 1 2 3 4; do
+            test -f "findings_list_seeded_row.png.b64.p$i"
+          done
+          cat findings_list_seeded_row.png.b64.p1 findings_list_seeded_row.png.b64.p2 findings_list_seeded_row.png.b64.p3 findings_list_seeded_row.png.b64.p4 > findings_list_seeded_row.png.b64
+          test "$(wc -c < findings_list_seeded_row.png.b64)" -eq 76044
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add findings_list_seeded_row.png.b64
-          git rm -f findings_list_seeded_row.png.b64.part1 findings_list_seeded_row.png.b64.part2 || true
-          git rm -f mcp_write_probe.txt || true
+          git rm -f findings_list_seeded_row.png.b64.p1 findings_list_seeded_row.png.b64.p2 findings_list_seeded_row.png.b64.p3 findings_list_seeded_row.png.b64.p4 findings_list_seeded_row.png.b64.part1 findings_list_seeded_row.png.b64.part2 mcp_write_probe.txt || true
           git commit -m "Add findings_list_seeded_row.png.b64"
           git push
