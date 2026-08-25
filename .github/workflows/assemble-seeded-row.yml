@@ -1,0 +1,28 @@
+name: Assemble seeded row b64
+on:
+  push:
+    paths:
+      - 'findings_list_seeded_row.png.b64.part1'
+      - 'findings_list_seeded_row.png.b64.part2'
+  workflow_dispatch:
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Concatenate parts
+        run: |
+          set -euo pipefail
+          test -f findings_list_seeded_row.png.b64.part1
+          test -f findings_list_seeded_row.png.b64.part2
+          cat findings_list_seeded_row.png.b64.part1 findings_list_seeded_row.png.b64.part2 > findings_list_seeded_row.png.b64
+          wc -c findings_list_seeded_row.png.b64
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add findings_list_seeded_row.png.b64
+          git rm -f findings_list_seeded_row.png.b64.part1 findings_list_seeded_row.png.b64.part2 || true
+          git rm -f mcp_write_probe.txt || true
+          git commit -m "Add findings_list_seeded_row.png.b64"
+          git push
